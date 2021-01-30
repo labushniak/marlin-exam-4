@@ -21,7 +21,7 @@
                 <div class="height-10 w-100 shadow-lg px-4 bg-brand-gradient">
                     <div class="d-flex align-items-center container p-0">
                         <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9 border-0">
-                            <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
+                            <a href="/" class="page-logo-link press-scale-down d-flex align-items-center">
                                 <img src="img/logo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
                                 <span class="page-logo-text mr-1">Учебный проект</span>
                             </a>
@@ -29,7 +29,7 @@
                         <span class="text-white opacity-50 ml-auto mr-2 hidden-sm-down">
                             Уже зарегистрированы?
                         </span>
-                        <a href="page_login.html" class="btn-link text-white ml-auto ml-sm-0">
+                        <a href="/login" class="btn-link text-white ml-auto ml-sm-0">
                             Войти
                         </a>
                     </div>
@@ -40,38 +40,43 @@
                             <div class="col-xl-12">
                                 <h2 class="fs-xxl fw-500 mt-4 text-white text-center">
                                     Регистрация
-                                    <small class="h3 fw-300 mt-3 mb-5 text-white opacity-60 hidden-sm-down">
-                                        Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться.
-                                        <br> 
-                                        По своей сути рыбатекст является альтернативой традиционному lorem ipsum
-                                        
-                                    </small>
                                 </h2>
                             </div>
+
                             <div class="col-xl-6 ml-auto mr-auto">
                                 <div class="card p-4 rounded-plus bg-faded">
+<!--вывод ошибок -->
+                                @if ($errors->any())
                                     <div class="alert alert-danger text-dark" role="alert">
-                                        <strong>Уведомление!</strong> Этот эл. адрес уже занят другим пользователем.
+                                    @foreach ($errors->all() as $error)
+                                        {{ $error }} <br>
+                                    @endforeach
                                     </div>
-                                    <form id="js-login" novalidate="" action="">
+                                @endif
+<!--вывод ошибок -->
+
+<!-- форма -->
+                                    <form id="js-login" novalidate="" action="/register" method="POST">
+                                    @csrf
                                         <div class="form-group">
                                             <label class="form-label" for="emailverify">Email</label>
-                                            <input type="email" id="emailverify" class="form-control" placeholder="Эл. адрес" required>
+                                            <input type="email" id="emailverify" class="form-control" placeholder="Эл. адрес" required name ="email" value="{{old('email')}}">
                                             <div class="invalid-feedback">Заполните поле.</div>
                                             <div class="help-block">Эл. адрес будет вашим логином при авторизации</div>
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label" for="userpassword">Пароль <br></label>
-                                            <input type="password" id="userpassword" class="form-control" placeholder="" required>
+                                            <input type="password" id="userpassword" class="form-control" placeholder="" required name="password">
                                             <div class="invalid-feedback">Заполните поле.</div>
                                         </div>
                                        
                                         <div class="row no-gutters">
                                             <div class="col-md-4 ml-auto text-right">
-                                                <button id="js-login-btn" type="submit" class="btn btn-block btn-danger btn-lg mt-3">Регистрация</button>
+                                                <button id="js-login-btn" type="submit" class="btn btn-block btn-danger btn-lg mt-3" name="submit" value="submit">Регистрация</button>
                                             </div>
                                         </div>
                                     </form>
+<!-- конец формы -->
                                 </div>
                             </div>
                         </div>
