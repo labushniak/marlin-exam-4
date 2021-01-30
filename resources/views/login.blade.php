@@ -28,24 +28,33 @@
             </a>
         </div>
         <div class="card p-4 border-top-left-radius-0 border-top-right-radius-0">
+        @if ($errors->any())
+            <div class="alert alert-danger text-dark" role="alert">
+                @foreach ($errors->all() as $error)
+                    {{ $error }} <br>
+                @endforeach
+            </div>
+        @endif
+
         @if($status)
             <div class="alert alert-success">
             {{ $status }}
             </div>
         @endif
-            <form action="">
+            <form action="/login" method="POST">
+            @csrf
                 <div class="form-group">
                     <label class="form-label" for="username">Email</label>
-                    <input type="email" id="username" class="form-control" placeholder="Эл. адрес" value="">
+                    <input type="email" id="username" class="form-control" placeholder="Эл. адрес" value="{{old('email')}}" name="email">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">Пароль</label>
-                    <input type="password" id="password" class="form-control" placeholder="" >
+                    <input type="password" id="password" class="form-control" placeholder="" name="password">
                 </div>
                 <div class="form-group text-left">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="rememberme">
-                        <label class="custom-control-label" for="rememberme">Запомнить меня</label>
+                        <input type="checkbox" class="custom-control-input" id="rememberme" name="remember">
+                        <label class="custom-control-label" for="rememberme" >Запомнить меня</label>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-default float-right">Войти</button>

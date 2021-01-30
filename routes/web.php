@@ -7,13 +7,9 @@ Route::get('/register', 'UsersController@registrationShowForm');
 Route::post('/register', 'UsersController@registrationPostHandler');
 
 Route::get('/login', 'UsersController@loginShowForm')->name('login');
-Route::post('/login', 'UsersController@loginPostHandler')->name('login');
+Route::post('/login', 'UsersController@loginPostHandler');
 
-Route::get('/', function () {
-    return view('users');
-});
-
-
+Route::get('/', 'UsersController@home')->name('home');
 
 
 
