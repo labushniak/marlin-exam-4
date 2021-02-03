@@ -105,7 +105,13 @@ class UsersController extends Controller
             ->join('users_links', 'users.id', '=', 'users_links.user_id')
             ->paginate(6);
 
-        return view('users', ['status' => $status, 'users' => $users]);
+        $user_statuses = [
+            'online' => 'Онлайн',
+            'dont_disturb' => 'Не беспокоить',
+            'out' => 'Отошел'
+        ];
+
+        return view('users', ['status' => $status, 'users' => $users, 'user_statuses' => $user_statuses]);
     }
 
     public function test()
