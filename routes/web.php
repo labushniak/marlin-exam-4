@@ -36,9 +36,6 @@ Route::get('/edit/{id?}', function ($id = null) {
 })->name('edit');
 
 
-Route::get('/edit/{id}', function () {
-    return view('edit');
-})->name('edit');
 
 Route::get('/security', function () {
     return view('security');
@@ -46,11 +43,15 @@ Route::get('/security', function () {
 
 Route::get('/status', function () {
     return view('status');
-});
+})->name('status');
 
 Route::get('/avatar', function () {
     return view('avatar');
-});
+})->name('avatar');
+
+Route::get('/delete', function () {
+    
+})->name('delete');
 
 Route::get('/test', 'UsersController@test');
 

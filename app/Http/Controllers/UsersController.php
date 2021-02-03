@@ -111,7 +111,9 @@ class UsersController extends Controller
             'out' => 'Отошел'
         ];
 
-        return view('users', ['status' => $status, 'users' => $users, 'user_statuses' => $user_statuses]);
+        $current_user_id = Auth::id();
+
+        return view('users', ['status' => $status, 'users' => $users, 'user_statuses' => $user_statuses, 'current_user_id' => $current_user_id]);
     }
 
     public function test()
