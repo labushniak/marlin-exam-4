@@ -2,32 +2,47 @@
 
 use Illuminate\Support\Facades\Route;
 
-
-Route::get('/register', 'UsersController@registrationShowForm');
-Route::post('/register', 'UsersController@registrationPostHandler');
-
-Route::get('/login', 'UsersController@loginShowForm')->name('login');
-Route::post('/login', 'UsersController@loginPostHandler');
-
 Route::get('/', 'UsersController@home')->name('home');
 
+Route::middleware('guest')->group(function(){
+    
+    Route::get('/register', 'UsersController@registrationShowForm')->name('registration');
+    Route::post('/register', 'UsersController@registrationPostHandler')->name('registration.create');
 
-
-Route::get('/create', function () {
-    return view('create');
+    Route::get('/login', 'UsersController@loginShowForm')->name('login');
+    Route::post('/login', 'UsersController@loginPostHandler')->name('login.create');
 });
 
-Route::get('/edit', function () {
+
+
+Route::middleware('auth')->group(function(){
+
+    Route::get('/logout', 'UsersController@logout')->name('logout');
+
+    Route::get('/profile', function () {
+        return view('profile');
+    })->name('profile');
+
+    Route::get('/create', function () {
+        return view('create');
+    })->name('create');
+});
+
+Route::get('/edit/{id?}', function ($id = null) {
+    if ($id){
+        return view('edit');
+    }
+    return redirect('/');
+})->name('edit');
+
+
+Route::get('/edit/{id}', function () {
     return view('edit');
-});
-
-Route::get('/profile', function () {
-    return view('profile');
-})->middleware('auth');
+})->name('edit');
 
 Route::get('/security', function () {
     return view('security');
-});
+})->name('security');
 
 Route::get('/status', function () {
     return view('status');
@@ -37,5 +52,5 @@ Route::get('/avatar', function () {
     return view('avatar');
 });
 
-Route::get('/test', 'UsersController@index');
+Route::get('/test', 'UsersController@test');
 

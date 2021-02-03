@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,10 +13,10 @@ class UsersController extends Controller
 {
     private $request;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, User $user)
     {
         $this->request = $request;
-        
+        $this->user = $user;
     }
 
     public function registrationShowForm()
@@ -25,7 +27,7 @@ class UsersController extends Controller
     public function registrationPostHandler()
     {
         //валидация почты и пароля
-        $this->validate($this->request, [
+        $this->request->validate([
             'email' => 'required|email:rfc|unique:users|min:6',
             'password' => 'required|min:6|max:25'
         ]);
@@ -34,17 +36,17 @@ class UsersController extends Controller
         User::create(['email' => $this->request->email, 'password' => Hash::make($this->request->password)]);
 
         //статус - пользователь зарегистрирован
-        session(['status' => 'New user registered!']);
+        $this->request->session(['status' => 'New user registered!']);
 
         return redirect()->route('login');
     }
 
     public function loginShowForm()
     {
-        //сохраняю данные сессии
+        //сохраняю данные flash-сообщения
         $status = session('status');
 
-        //удаляю сессию
+        //удаляю куки с флеш-сообщением
         session()->forget('status');
 
         return view('login', ['status' => $status]);
@@ -52,32 +54,63 @@ class UsersController extends Controller
 
     public function loginPostHandler()
     {
+        $this->request->validate([
+            'email' => 'required|email:rfc',
+            'password' => 'required'
+        ]);
+        
         $credentials = $this->request->only('email', 'password');
 
-        if(Auth::attempt($credentials, $this->request->remember)){
-            session()->regenerate();
-            session(['status' => 'User logged in successfully!']);
+        if($this->request->remember == "on"){
+            $is_remembered = true;
+        } else {
+            $is_remembered = false;
+        }
+
+        if(Auth::attempt($credentials, $is_remembered)){
+            $this->request->session()->regenerate();
+            $this->request->session(['status' => 'User logged in successfully!']);
             return redirect()->route('home');
 
         }
 
-        //return back();
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-            
+        return redirect()->back()->withErrors([
+            'email' => 'Email or password are invalid.',
             ]);
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        $this->request->session()->invalidate();
+
+        $this->request->session()->regenerateToken();
+
+        return redirect()->route('home');
+
     }
 
     public function home()
     {
 
+        //обработка flash-сообщений
         //сохраняю данные сессии
         $status = session('status');
-
-        //удаляю сессию
         session()->forget('status');
 
-        return view('users', ['status' => $status]);
+        //вывод пользователей из БД с пагинатором
+        $users = DB::table('users')
+            ->join('users_info', 'users.id', '=', 'users_info.user_id')
+            ->join('users_links', 'users.id', '=', 'users_links.user_id')
+            ->paginate(6);
+
+        return view('users', ['status' => $status, 'users' => $users]);
+    }
+
+    public function test()
+    {
+        \App\Models\UsersInfo::factory()->count(5)->create();
     }
     
 }

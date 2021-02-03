@@ -41,7 +41,7 @@
             {{ $status }}
             </div>
         @endif
-            <form action="/login" method="POST">
+            <form action="{{ route('login.create') }}" method="POST">
             @csrf
                 <div class="form-group">
                     <label class="form-label" for="username">Email</label>
@@ -61,7 +61,7 @@
             </form>
         </div>
         <div class="blankpage-footer text-center">
-            Нет аккаунта? <a href="/register"><strong>Зарегистрироваться</strong>
+            Нет аккаунта? <a href="{{ route('registration') }}"><strong>Зарегистрироваться</strong>
         </div>
     </div>
     <video poster="img/backgrounds/clouds.png" id="bgvid" playsinline autoplay muted loop>

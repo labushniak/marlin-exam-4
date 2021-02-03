@@ -29,7 +29,7 @@
                         <span class="text-white opacity-50 ml-auto mr-2 hidden-sm-down">
                             Уже зарегистрированы?
                         </span>
-                        <a href="/login" class="btn-link text-white ml-auto ml-sm-0">
+                        <a href="{{ route('login') }}" class="btn-link text-white ml-auto ml-sm-0">
                             Войти
                         </a>
                     </div>
@@ -56,7 +56,7 @@
 <!--вывод ошибок -->
 
 <!-- форма -->
-                                    <form id="js-login" novalidate="" action="/register" method="POST">
+                                    <form id="js-login" novalidate="" action="{{ route('registration.create') }}" method="POST">
                                     @csrf
                                         <div class="form-group">
                                             <label class="form-label" for="emailverify">Email</label>
