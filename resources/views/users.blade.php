@@ -60,7 +60,9 @@
             </div>
             <div class="row">
                 <div class="col-xl-12">
-                    <a class="btn btn-success" href="{{route('create')}}">Добавить</a>
+                    @if(auth()->check() && auth()->user()->is_admin)
+                        <a class="btn btn-success" href="{{route('create')}}">Добавить</a>
+                    @endif
 
                     <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">
                         <input type="text" id="js-filter-contacts" name="filter-contacts" class="form-control shadow-inset-2 form-control-lg" placeholder="Найти пользователя">
@@ -99,7 +101,7 @@
                                 <div class="info-card-text flex-1">
                                     <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
                                         {{ $user->name }}
-                                        @if($current_user_id == $user->id)
+                                        @if($current_user_id == $user->id || (auth()->check() && auth()->user()->is_admin == 1))
                                         <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                         <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                         @endif

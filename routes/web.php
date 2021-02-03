@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/create', function () {
         return view('create');
-    })->name('create');
+    })->name('create')->middleware('admin');
 });
 
 Route::get('/edit/{id?}', function ($id = null) {
