@@ -136,9 +136,16 @@ class UsersController extends Controller
         })
         ->where('users.id', $id)
         ->get();
-
         
-        return view('profile', ['user' => $userById->first()]);
+        
+
+        if ($userById->first()) {
+            return view('profile', ['user' => $userById->first()]);
+        }
+
+        $this->request->session(['status' => 'User ID does not exist']);
+
+        return redirect()->route('home');
         
     }
 
@@ -151,11 +158,19 @@ class UsersController extends Controller
     {
         $this->request->validate([
             'email' => 'required|email:rfc|unique:users|min:6',
-            'password' => 'required|min:6|max:25'
+            'password' => 'required|min:6|max:25',
+            'job_title' => 'required|min:3',
+            'phone' => 'required|min:6',
+            'address' => 'required|min:6',
+            'avatar' => 'required|image',
+            'vk' => 'required|min:3',
+            'telegram' => 'required|min:3',
+            'instagram' => 'required|min:3'
         ]);
         
         //добавляю пользователя в таблицу users, users_info, users_links
         $newUser = User::create([
+                'name' => $this->request->name,
                 'email' => $this->request->email, 
                 'password' => Hash::make($this->request->password)
             ]);
@@ -164,7 +179,8 @@ class UsersController extends Controller
             'user_id' => $newUser->id, 
             'job_title' => $this->request->job_title, 
             'phone' => $this->request->phone, 
-            'address' => $this->request->address
+            'address' => $this->request->address,
+            'avatar' => $this->request->file('avatar')->store('uploads')
         ]);
 
         UsersLinks::create([
@@ -180,10 +196,6 @@ class UsersController extends Controller
         return redirect()->route('home');
     }
 
-    public function setAvatar()
-    {
-        
-    }
 
     public function test()
     {

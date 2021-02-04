@@ -15,11 +15,11 @@
 
 @section('content')
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-primary-gradient">
-            <a class="navbar-brand d-flex align-items-center fw-500" href="users.html"><img alt="logo" class="d-inline-block align-top mr-2" src="img/logo.png"> Учебный проект</a> <button aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarColor02" data-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
+            <a class="navbar-brand d-flex align-items-center fw-500" href="{{ route('home') }}"><img alt="logo" class="d-inline-block align-top mr-2" src="/img/logo.png"> Учебный проект</a> <button aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarColor02" data-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarColor02">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/">Главная <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ route('home') }}">Главная <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                     @php
@@ -99,8 +99,8 @@
                                     <span class="rounded-circle profile-image d-block " style="background-image:url(' {{ $user->avatar }}'); background-size: cover;"></span>
                                 </span>
                                 <div class="info-card-text flex-1">
-                                    <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
-                                        {{ $user->name }}
+                                    
+                                        <a href="{{ route ('profile') . '/' . $user->user_id }}" class="fs-xl text-truncate text-truncate-lg text-info">{{ $user->name }}</a><a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
                                         @if($current_user_id == $user->id || (auth()->check() && auth()->user()->is_admin == 1))
                                         <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                         <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
