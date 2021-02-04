@@ -27,20 +27,14 @@ Route::middleware('auth')->group(function(){
     Route::get('/edit/{id?}', 'UsersController@editShowForm')->name('edit.form');
     Route::post('/edit/{id?}', 'UsersController@editPostHandler')->name('edit.action');
 
-    
+    Route::get('/security/{id?}', 'UsersController@securityShowForm')->name('security.form');
+    Route::post('/security/{id?}', 'UsersController@securityPostHandler')->name('security.action');
+
+    Route::get('/status/{id?}', 'UsersController@statusShowForm')->name('status.form');
+    Route::post('/status/{id?}', 'UsersController@statusPostHandler')->name('status.action');
 });
 
 
-
-
-
-Route::get('/security/{id?}', function () {
-    return view('security');
-})->name('security');
-
-Route::get('/status/{id?}', function () {
-    return view('status');
-})->name('status');
 
 Route::get('/avatar/{id?}', function () {
     return view('avatar');

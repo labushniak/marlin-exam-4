@@ -110,10 +110,10 @@
                                         <a class="dropdown-item" href="{{ route ('edit.form', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-edit"></i>
                                         Редактировать</a>
-                                        <a class="dropdown-item" href="{{ route ('security', ['id' => $user->user_id]) }}">
+                                        <a class="dropdown-item" href="{{ route ('security.form', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-lock"></i>
                                         Безопасность</a>
-                                        <a class="dropdown-item" href="{{ route ('status', ['id' => $user->user_id]) }}">
+                                        <a class="dropdown-item" href="{{ route ('status.form', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-sun"></i>
                                         Установить статус</a>
                                         <a class="dropdown-item" href="{{ route ('avatar', ['id' => $user->user_id]) }}">

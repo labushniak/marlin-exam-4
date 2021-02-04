@@ -153,7 +153,9 @@ class UsersController extends Controller
 
     public function createPostHandler()
     {
+        //валидация данных формы
         $this->request->validate([
+            'name' => 'required|min:3',
             'email' => 'required|email:rfc|unique:users|min:6',
             'password' => 'required|min:6|max:25',
             'job_title' => 'required|min:3',
@@ -195,6 +197,7 @@ class UsersController extends Controller
 
     public function editShowForm($id = null)
     {
+        //проверяем существование id
         if (!$id){
             session(['status' => 'User ID does not exist!']);
             return redirect()->route('home');
@@ -219,7 +222,7 @@ class UsersController extends Controller
         if ($userById->first()) {
             
             return view('edit', ['user' => $userById->first()]);
-        }
+        } 
 
         session(['status' => 'User ID does not exist']);
         return redirect()->route('home');
@@ -228,6 +231,7 @@ class UsersController extends Controller
 
     public function editPostHandler($id)
     {
+        //валидация данных формы
         $this->request->validate([
             'name' => 'required|min:2',
             'job_title' => 'required|min:3',
@@ -250,6 +254,105 @@ class UsersController extends Controller
         session(['status' => 'User data updated successfully!']);
         return redirect()->route('home');
         
+    }
+
+    public function securityShowForm($id = null)
+    {
+        //проверяем существование id
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+
+        $userById = DB::table('users')->where('id', $id);
+        
+        if($userById->first()){
+            return view('security', ['user' => $userById->first()]);
+        }
+
+        session(['status' => 'User ID does not exist']);
+        return redirect()->route('home');
+    }
+
+    public function securityPostHandler($id = null)
+    {
+        //проверяем существование id
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+        
+        //берем существующий email
+        $old_email = DB::table('users')->where('id', $id)->first()->email;
+
+        if($old_email != $this->request->email){//сравниваем email из формы и email в базе
+            //валидация данных формы если email был измененн
+            $this->request->validate([
+                'email' => 'required|email:rfc|unique:users|min:6',
+                'password' => 'required|min:6|max:25',
+                'password_again' => 'required|same:password'
+            ]);    
+        }else{
+            //валидация данных формы если email не был измененн
+            $this->request->validate([
+                'email' => 'required|email:rfc|min:6',
+                'password' => 'required|min:6|max:25',
+                'password_again' => 'required|same:password'
+            ]);    
+        }
+
+        //обновляем данные пользователя
+        $result = DB::table('users')
+              ->where('id', $id)
+              ->update(['email' => $this->request->email, 'password' => Hash::make($this->request->password)]);
+
+        //если обновление прошло успешно, то выводим статус
+        if($result){
+            session(['status' => 'Security data updated successfully!']);
+            return redirect()->route('home');
+        }
+
+    }
+
+    public function statusShowForm($id = null)
+    {
+       //проверяем существование id
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+
+        $user = DB::table('users_info')->where('user_id', $id)->first();
+        
+        $statuses = [
+            'online' => 'Онлайн',
+            'dont_disturb' => 'Не беспокоить',
+            'out' => 'Отошел'
+        ];
+
+        return view('status', ['user' => $user, 'statuses' => $statuses]);
+    }
+
+    public function statusPostHandler($id = null)
+    {
+        //проверяем существование id
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+
+        //обновляем данные пользователя
+        $result = DB::table('users_info')
+              ->where('user_id', $id)
+              ->update(['status' => $this->request->status]);
+
+        //если обновление прошло успешно, то выводим статус
+        if($result){
+                session(['status' => 'Status updated successfully!']);
+                return redirect()->route('home');
+            }
+        
+
     }
 
     public function test()
