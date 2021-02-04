@@ -143,7 +143,7 @@ class UsersController extends Controller
             return view('profile', ['user' => $userById->first()]);
         }
 
-        $this->request->session(['status' => 'User ID does not exist']);
+        session(['status' => 'User ID does not exist']);
 
         return redirect()->route('home');
         
