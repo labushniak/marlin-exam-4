@@ -31,7 +31,7 @@
 
                 @if(auth()->check())
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('profile') . '/' . auth()->user()->id }} ">Вы вошли как {{ auth()->user()->name }}</a>
+                    <a class="nav-link" href="{{ route('profile', ['id' => auth()->user()->id]) }}">Вы вошли как {{ auth()->user()->name }}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('logout') }}">Выйти</a>
@@ -116,7 +116,7 @@
                                         <a class="dropdown-item" href="{{ route ('status.form', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-sun"></i>
                                         Установить статус</a>
-                                        <a class="dropdown-item" href="{{ route ('avatar', ['id' => $user->user_id]) }}">
+                                        <a class="dropdown-item" href="{{ route ('avatar.form', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-camera"></i>
                                             Загрузить аватар
                                         </a>

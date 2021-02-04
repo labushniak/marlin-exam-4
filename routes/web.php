@@ -32,17 +32,16 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/status/{id?}', 'UsersController@statusShowForm')->name('status.form');
     Route::post('/status/{id?}', 'UsersController@statusPostHandler')->name('status.action');
+
+    Route::get('/avatar/{id?}', 'UsersController@avatarShowForm')->name('avatar.form');
+    Route::post('/avatar/{id?}', 'UsersController@avatarPostHandler')->name('avatar.action');
+
+    Route::get('/delete/{id?}', 'UsersController@delete')->name('delete');
 });
 
 
 
-Route::get('/avatar/{id?}', function () {
-    return view('avatar');
-})->name('avatar');
 
-Route::get('/delete/{id?}', function () {
-    
-})->name('delete');
 
 Route::get('/test', 'UsersController@test');
 

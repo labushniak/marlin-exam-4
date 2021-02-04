@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UsersInfo;
@@ -264,6 +265,15 @@ class UsersController extends Controller
             return redirect()->route('home');
         }
 
+        //получаем данные пользователя для вывода в форме
+        $userById = DB::table('users')->where('id', $id)->get();
+
+        //проверяем, редактирует пользователь свой профиль или это делает админ
+        if (!(auth()->user()->id == $userById->first()->id || (auth()->check() && auth()->user()->is_admin == 1))){
+            session(['status' => 'You do not have permission to edit user profile']);
+            return redirect()->route('home');
+        }
+        
         $userById = DB::table('users')->where('id', $id);
         
         if($userById->first()){
@@ -322,6 +332,15 @@ class UsersController extends Controller
             return redirect()->route('home');
         }
 
+        //получаем данные пользователя для вывода в форме
+        $userById = DB::table('users')->where('id', $id)->get();
+
+        //проверяем, редактирует пользователь свой профиль или это делает админ
+        if (!(auth()->user()->id == $userById->first()->id || (auth()->check() && auth()->user()->is_admin == 1))){
+            session(['status' => 'You do not have permission to edit user profile']);
+            return redirect()->route('home');
+        }
+
         $user = DB::table('users_info')->where('user_id', $id)->first();
         
         $statuses = [
@@ -351,9 +370,68 @@ class UsersController extends Controller
                 session(['status' => 'Status updated successfully!']);
                 return redirect()->route('home');
             }
+    }
+
+
+    public function avatarShowForm($id = null)
+    {
+        //проверяем существование id
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+
+        //получаем данные пользователя для вывода в форме
+        $userById = DB::table('users')->where('id', $id)->get();
+
+        //проверяем, редактирует пользователь свой профиль или это делает админ
+        if (!(auth()->user()->id == $userById->first()->id || (auth()->check() && auth()->user()->is_admin == 1))){
+            session(['status' => 'You do not have permission to edit user profile']);
+            return redirect()->route('home');
+        }
         
+        $user = DB::table('users_info')->where('user_id', $id)->first();
+
+        return view('avatar', ['user' => $user]);
+    }
+
+
+
+    public function avatarPostHandler($id = null)
+    {
+        //проверяем существование id
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+        
+        //валидация данных формы
+        $this->request->validate([
+            'avatar' => 'required|image'
+        ]);
+
+
+        //удаляем старый аватар
+        $imageName = DB::table('users_info')
+                    ->where('user_id', $id)
+                    ->select('*')
+                    ->first()
+                    ->avatar;
+
+        Storage::delete($imageName);
+
+        //обновляем данные пользователя
+        $result = DB::table('users_info')
+              ->where('user_id', $id)
+              ->update(['avatar' => $this->request->file('avatar')->store('uploads')]);
+
+        if($result){
+                session(['status' => 'Avatar updated successfully!']);
+                return redirect()->route('home');
+            }
 
     }
+
 
     public function test()
     {

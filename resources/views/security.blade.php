@@ -24,7 +24,7 @@
             <ul class="navbar-nav ml-auto">
                 @if(auth()->check())
                     <li class="nav-item">
-                    <a class="nav-link" href="{{ route('profile') . '/' . auth()->user()->id }} ">Вы вошли как {{ auth()->user()->name }}</a>
+                    <a class="nav-link" href="{{ route('profile', ['id' => auth()->user()->id]) }}">Вы вошли как {{ auth()->user()->name }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}">Выйти</a>
