@@ -477,11 +477,5 @@ class UsersController extends Controller
         return redirect()->route('home');
 
     }
-
-
-    public function test()
-    {
-        \App\Models\UsersInfo::factory()->count(5)->create();
-    }
-    
+   
 }

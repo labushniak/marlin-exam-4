@@ -38,10 +38,3 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/delete/{id?}', 'UsersController@delete')->name('delete');
 });
-
-
-
-
-
-Route::get('/test', 'UsersController@test');
-
