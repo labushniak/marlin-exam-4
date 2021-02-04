@@ -314,7 +314,7 @@ class UsersController extends Controller
         //обновляем данные пользователя
         $result = DB::table('users')
               ->where('id', $id)
-              ->update(['email' => $this->request->email, 'password' => Hash::make($this->request->password)]);
+              ->updateOrInsert(['email' => $this->request->email, 'password' => Hash::make($this->request->password)]);
 
         //если обновление прошло успешно, то выводим статус
         if($result){
@@ -359,17 +359,19 @@ class UsersController extends Controller
             session(['status' => 'User ID does not exist!']);
             return redirect()->route('home');
         }
-
+        
         //обновляем данные пользователя
         $result = DB::table('users_info')
               ->where('user_id', $id)
-              ->update(['status' => $this->request->status]);
-
+              ->updateOrInsert(['status' => $this->request->status]);
+        
+        
         //если обновление прошло успешно, то выводим статус
         if($result){
                 session(['status' => 'Status updated successfully!']);
                 return redirect()->route('home');
             }
+            
     }
 
 
@@ -429,6 +431,50 @@ class UsersController extends Controller
                 session(['status' => 'Avatar updated successfully!']);
                 return redirect()->route('home');
             }
+
+    }
+
+
+    public function delete($id = null)
+    {
+        //проверяем существование id
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+
+        //получаем данные пользователя для вывода в форме
+        $userById = DB::table('users')->where('id', $id)->get();
+
+        //проверяем, редактирует пользователь свой профиль или это делает админ
+        if (!(auth()->user()->id == $userById->first()->id || (auth()->check() && auth()->user()->is_admin == 1))){
+            session(['status' => 'You do not have permission to edit user profile']);
+            return redirect()->route('home');
+        }
+        
+        //удаляем аватар
+        $imageName = DB::table('users_info')
+                    ->where('user_id', $id)
+                    ->select('*')
+                    ->first()
+                    ->avatar;
+
+        Storage::delete($imageName);
+        
+        //удаляем все записи
+        DB::table('users')->where('id', $id)->delete();
+        DB::table('users_info')->where('user_id', $id)->delete();
+        DB::table('users_links')->where('user_id', $id)->delete();
+
+        //удаление сессий
+
+        if(!auth()->user()->is_admin == 1){
+            $this->request->session()->invalidate();
+            $this->request->session()->regenerateToken();
+        }
+
+        session(['status' => 'User deleted!']);
+        return redirect()->route('home');
 
     }
 

@@ -22,9 +22,6 @@
                         <a class="nav-link" href="{{ route('home') }}">Главная <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                    @php
-                        dump(auth()->check());
-                    @endphp
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
