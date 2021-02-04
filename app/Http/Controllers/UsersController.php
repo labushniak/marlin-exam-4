@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\UsersInfo;
+use App\Models\UsersLinks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -32,12 +34,14 @@ class UsersController extends Controller
             'password' => 'required|min:6|max:25'
         ]);
         
-        //добавляю в таблицу users email и hash пароля
-        User::create(['email' => $this->request->email, 'password' => Hash::make($this->request->password)]);
-
+        //добавляю пользователя в таблицу users, users_info, users_links
+        $newUser = User::create(['email' => $this->request->email, 'password' => Hash::make($this->request->password)]);
+        UsersInfo::create(['user_id' => $newUser->id, 'job_title' => '', 'phone' => '', 'address' => '']);
+        UsersLinks::create(['user_id' => $newUser->id, 'vk' => '', 'telegram' => '', 'instagram' => '']);
+        
         //статус - пользователь зарегистрирован
-        $this->request->session(['status' => 'New user registered!']);
-
+        session(['status' => 'New user registered!']);
+        
         return redirect()->route('login');
     }
 
@@ -137,6 +141,50 @@ class UsersController extends Controller
         return view('profile', ['user' => $userById->first()]);
         
     }
+
+    public function createShowForm()
+    {    
+        return view('create');
+    }
+
+    public function createPostHandler()
+    {
+        $this->request->validate([
+            'email' => 'required|email:rfc|unique:users|min:6',
+            'password' => 'required|min:6|max:25'
+        ]);
+        
+        //добавляю пользователя в таблицу users, users_info, users_links
+        $newUser = User::create([
+                'email' => $this->request->email, 
+                'password' => Hash::make($this->request->password)
+            ]);
+
+        UsersInfo::create([
+            'user_id' => $newUser->id, 
+            'job_title' => $this->request->job_title, 
+            'phone' => $this->request->phone, 
+            'address' => $this->request->address
+        ]);
+
+        UsersLinks::create([
+            'user_id' => $newUser->id, 
+            'vk' => $this->request->vk, 
+            'telegram' => $this->request->telegram, 
+            'instagram' => $this->request->instagram
+        ]);
+        
+        //статус - пользователь зарегистрирован
+        session(['status' => 'New user registered!']);
+        
+        return redirect()->route('home');
+    }
+
+    public function setAvatar()
+    {
+        
+    }
+
     public function test()
     {
         \App\Models\UsersInfo::factory()->count(5)->create();

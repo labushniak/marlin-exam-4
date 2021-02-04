@@ -21,9 +21,8 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/profile/{id?}', 'UsersController@showProfile')->name('profile');
 
-    Route::get('/create', function () {
-        return view('create');
-    })->name('create')->middleware('admin');
+    Route::get('/create', 'UsersController@createShowForm')->name('create.form')->middleware('admin');
+    Route::post('/create', 'UsersController@createPostHandler')->name('create.action')->middleware('admin');
 });
 
 Route::get('/edit/{id?}', function ($id = null) {

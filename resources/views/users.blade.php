@@ -61,7 +61,7 @@
             <div class="row">
                 <div class="col-xl-12">
                     @if(auth()->check() && auth()->user()->is_admin)
-                        <a class="btn btn-success" href="{{route('create')}}">Добавить</a>
+                        <a class="btn btn-success" href="{{route('create.form')}}">Добавить</a>
                     @endif
 
                     <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">
@@ -135,12 +135,18 @@
                         </div>
                         <div class="card-body p-0 collapse show">
                             <div class="p-3">
+                            @if($user->phone)
                                 <a href="tel:{{ $user->phone }}" class="mt-1 d-block fs-sm fw-400 text-dark">
                                     <i class="fas fa-mobile-alt text-muted mr-2"></i> {{ $user->phone }}</a>
+                            @endif
+                            @if($user->email)
                                 <a href="mailto:{{ $user->email }}" class="mt-1 d-block fs-sm fw-400 text-dark">
                                     <i class="fas fa-mouse-pointer text-muted mr-2"></i> {{ $user->email }}</a>
+                            @endif
+                            @if($user->address)
                                 <address class="fs-sm fw-400 mt-4 text-muted">
                                     <i class="fas fa-map-pin mr-2"></i> {{ $user->address }}</address>
+                            @endif
                                 <div class="d-flex flex-row">
                                     <a href="https://vk.com/{{ $user->vk }}" class="mr-2 fs-xxl" style="color:#4680C2">
                                         <i class="fab fa-vk"></i>
