@@ -19,9 +19,7 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/logout', 'UsersController@logout')->name('logout');
 
-    Route::get('/profile', function () {
-        return view('profile');
-    })->name('profile');
+    Route::get('/profile/{id?}', 'UsersController@showProfile')->name('profile');
 
     Route::get('/create', function () {
         return view('create');

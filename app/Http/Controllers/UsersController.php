@@ -116,6 +116,27 @@ class UsersController extends Controller
         return view('users', ['status' => $status, 'users' => $users, 'user_statuses' => $user_statuses, 'current_user_id' => $current_user_id]);
     }
 
+
+    public function showProfile($id = null)
+    {
+        if (!$id){
+            return redirect('/');    
+        }
+
+        $userById = DB::table('users')
+        ->join('users_info', function ($join) {
+            $join->on('users.id', '=', 'users_info.user_id');
+        })
+        ->join('users_links', function ($join) {
+            $join->on('users.id', '=', 'users_links.user_id');
+        })
+        ->where('users.id', $id)
+        ->get();
+
+        
+        return view('profile', ['user' => $userById->first()]);
+        
+    }
     public function test()
     {
         \App\Models\UsersInfo::factory()->count(5)->create();
