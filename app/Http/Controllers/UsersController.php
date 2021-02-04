@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UsersInfo;
@@ -124,7 +123,7 @@ class UsersController extends Controller
     public function showProfile($id = null)
     {
         if (!$id){
-            return redirect('/');    
+            return redirect()->route('home');    
         }
 
         $userById = DB::table('users')
@@ -137,8 +136,6 @@ class UsersController extends Controller
         ->where('users.id', $id)
         ->get();
         
-        
-
         if ($userById->first()) {
             return view('profile', ['user' => $userById->first()]);
         }
@@ -196,6 +193,64 @@ class UsersController extends Controller
         return redirect()->route('home');
     }
 
+    public function editShowForm($id = null)
+    {
+        if (!$id){
+            session(['status' => 'User ID does not exist!']);
+            return redirect()->route('home');
+        }
+
+        //получаем данные пользователя для вывода в форме
+        $userById = DB::table('users')
+        ->join('users_info', function ($join) {
+            $join->on('users.id', '=', 'users_info.user_id');
+        })
+        ->where('users.id', $id)
+        ->get();
+
+        //проверяем, редактирует пользователь свой профиль или это делает админ
+        if (!(auth()->user()->id == $userById->first()->user_id || (auth()->check() && auth()->user()->is_admin == 1))){
+            session(['status' => 'You do not have permission to edit user profile']);
+            return redirect()->route('home');
+        }
+        
+        
+
+        if ($userById->first()) {
+            
+            return view('edit', ['user' => $userById->first()]);
+        }
+
+        session(['status' => 'User ID does not exist']);
+        return redirect()->route('home');
+    }
+
+
+    public function editPostHandler($id)
+    {
+        $this->request->validate([
+            'name' => 'required|min:2',
+            'job_title' => 'required|min:3',
+            'phone' => 'required|min:6',
+            'address' => 'required|min:6',
+        ]);
+        
+        DB::table('users')
+              ->where('id', $id)
+              ->update(['name' => $this->request->name]);
+
+        DB::table('users_info')
+              ->where('user_id', $id)
+              ->update([
+                  'job_title' => $this->request->job_title,
+                  'phone' => $this->request->phone,
+                  'address' => $this->request->address,
+                ]);
+        
+        session(['status' => 'User data updated successfully!']);
+        return redirect()->route('home');
+        
+    }
 
     public function test()
     {

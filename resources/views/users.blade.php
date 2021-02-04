@@ -100,27 +100,27 @@
                                 </span>
                                 <div class="info-card-text flex-1">
                                     
-                                        <a href="{{ route ('profile') . '/' . $user->user_id }}" class="fs-xl text-truncate text-truncate-lg text-info">{{ $user->name }}</a><a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
-                                        @if($current_user_id == $user->id || (auth()->check() && auth()->user()->is_admin == 1))
+                                        <a href="{{ route ('profile', ['id' => $user->user_id]) }}" class="fs-xl text-truncate text-truncate-lg text-info">{{ $user->name }}</a><a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
+                                        @if($current_user_id == $user->user_id || (auth()->check() && auth()->user()->is_admin == 1))
                                         <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                         <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                         @endif
                                     </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{{ route ('edit') . '/' . $user->id }}">
+                                        <a class="dropdown-item" href="{{ route ('edit.form', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-edit"></i>
                                         Редактировать</a>
-                                        <a class="dropdown-item" href="{{ route ('security')  . '/' . $user->id }}">
+                                        <a class="dropdown-item" href="{{ route ('security', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-lock"></i>
                                         Безопасность</a>
-                                        <a class="dropdown-item" href="{{ route ('status')  . '/' . $user->id }}">
+                                        <a class="dropdown-item" href="{{ route ('status', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-sun"></i>
                                         Установить статус</a>
-                                        <a class="dropdown-item" href="{{ route ('avatar')  . '/' . $user->id }}">
+                                        <a class="dropdown-item" href="{{ route ('avatar', ['id' => $user->user_id]) }}">
                                             <i class="fa fa-camera"></i>
                                             Загрузить аватар
                                         </a>
-                                        <a href="{{ route ('delete')  . '/' . $user->id }}" class="dropdown-item" onclick="return confirm('are you sure?');">
+                                        <a href="{{ route ('delete', ['id' => $user->user_id]) }}" class="dropdown-item" onclick="return confirm('are you sure?');">
                                             <i class="fa fa-window-close"></i>
                                             Удалить
                                         </a>

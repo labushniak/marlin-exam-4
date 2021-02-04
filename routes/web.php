@@ -23,30 +23,30 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/create', 'UsersController@createShowForm')->name('create.form')->middleware('admin');
     Route::post('/create', 'UsersController@createPostHandler')->name('create.action')->middleware('admin');
+
+    Route::get('/edit/{id?}', 'UsersController@editShowForm')->name('edit.form');
+    Route::post('/edit/{id?}', 'UsersController@editPostHandler')->name('edit.action');
+
+    
 });
 
-Route::get('/edit/{id?}', function ($id = null) {
-    if ($id){
-        return view('edit');
-    }
-    return redirect('/');
-})->name('edit');
 
 
 
-Route::get('/security', function () {
+
+Route::get('/security/{id?}', function () {
     return view('security');
 })->name('security');
 
-Route::get('/status', function () {
+Route::get('/status/{id?}', function () {
     return view('status');
 })->name('status');
 
-Route::get('/avatar', function () {
+Route::get('/avatar/{id?}', function () {
     return view('avatar');
 })->name('avatar');
 
-Route::get('/delete', function () {
+Route::get('/delete/{id?}', function () {
     
 })->name('delete');
 
