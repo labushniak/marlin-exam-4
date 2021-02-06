@@ -99,7 +99,6 @@ class UsersController extends Controller
     {
 
         //обработка flash-сообщений
-        //сохраняю данные сессии
         $status = session('status');
         session()->forget('status');
 
