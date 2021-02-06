@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -205,26 +206,6 @@ class UserTest extends TestCase
         $response->assertRedirect('/login'); 
         $this->assertGuest();
     }
-
-    /*
-    public function test_accessProfilePageWhenAuthentficated()
-    {
-        $id = random_int(1,100);
-        
-        $user = User::factory()->create([ 
-            'id' => $id
-        ]); 
-        
-        $url = '/profile/' . $id;
-
-        
-        $response = $this->actingAs($user)->withSession(['status' => 'User logged in successfully!'])->get($url);
-        
-        $response->assertStatus(200);
-        $response->assertViewIs('profile');
-        $response->assertSeeText('John Doe', $escaped = true);
-        
-    }*/
-
+    
 
 }
