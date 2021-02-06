@@ -14,7 +14,7 @@ class UserModelTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function test_UserModel()
     {
         
         $job_title = Str::random(10);
